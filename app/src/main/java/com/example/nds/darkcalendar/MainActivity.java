@@ -1,16 +1,26 @@
 package com.example.nds.darkcalendar;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +38,37 @@ public class MainActivity extends AppCompatActivity {
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
         caldroidFragment.setArguments(args);
+        Map<Date,Drawable> dates = new HashMap<>();
+        Map<Date,Integer> colors = new HashMap<>();
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            dates.put(format.parse("05.12.2018"),getResources().getDrawable(R.drawable.white_background));
+            dates.put(format.parse("06.12.2018"),getResources().getDrawable(R.drawable.white_background));
+            dates.put(format.parse("07.12.2018"),getResources().getDrawable(R.drawable.white_background));
+            dates.put(format.parse("08.12.2018"),getResources().getDrawable(R.drawable.white_background));
+            dates.put(format.parse("09.12.2018"),getResources().getDrawable(R.drawable.white_background));
+            dates.put(format.parse("10.12.2018"),getResources().getDrawable(R.drawable.white_background));
+        } catch (ParseException e){
+
+        }
+        try {
+            colors.put(format.parse("05.12.2018"),(R.color.colorAccent));
+            colors.put(format.parse("06.12.2018"),(R.color.colorAccent));
+            colors.put(format.parse("07.12.2018"),(R.color.colorAccent));
+            colors.put(format.parse("08.12.2018"),(R.color.colorAccent));
+            colors.put(format.parse("09.12.2018"),(R.color.colorAccent));
+            colors.put(format.parse("10.12.2018"),(R.color.colorAccent));
+        } catch (ParseException e){
+
+        }
+        caldroidFragment.setTextColorForDates(colors);
+        caldroidFragment.setBackgroundDrawableForDates(dates);
+        caldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+
+            }
+        });
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendar_containter, caldroidFragment);
         t.commit();
