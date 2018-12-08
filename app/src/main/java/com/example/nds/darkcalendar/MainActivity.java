@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
+        args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
+        args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, false);
+        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, true);
         caldroidFragment.setArguments(args);
         caldroidFragment.setThemeResource(R.style.CaldroidDefaultDark);
         Map<Date, Drawable> dates = new HashMap<>();
