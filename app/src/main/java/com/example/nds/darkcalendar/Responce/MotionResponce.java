@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class MotionResponce implements Parcelable {
     @SerializedName("success")
     private boolean success;
@@ -13,7 +15,7 @@ public class MotionResponce implements Parcelable {
     @SerializedName("message")
     private String message;
     @SerializedName("data")
-    private MotionResponceData data;
+    private ArrayList<MotionResponceData> data;
 
     public boolean isSuccess() {
         return success;
@@ -39,11 +41,11 @@ public class MotionResponce implements Parcelable {
         this.message = message;
     }
 
-    public MotionResponceData getData() {
+    public ArrayList<MotionResponceData> getData() {
         return data;
     }
 
-    public void setData(MotionResponceData data) {
+    public void setData(ArrayList<MotionResponceData> data) {
         this.data = data;
     }
 
@@ -58,7 +60,7 @@ public class MotionResponce implements Parcelable {
         dest.writeByte(this.success ? (byte) 1 : (byte) 0);
         dest.writeInt(this.totalCount);
         dest.writeString(this.message);
-        dest.writeParcelable(this.data, flags);
+        dest.writeTypedList(this.data);
     }
 
     public MotionResponce() {
@@ -68,10 +70,10 @@ public class MotionResponce implements Parcelable {
         this.success = in.readByte() != 0;
         this.totalCount = in.readInt();
         this.message = in.readString();
-        this.data = in.readParcelable(MotionResponceData.class.getClassLoader());
+        this.data = in.createTypedArrayList(MotionResponceData.CREATOR);
     }
 
-    public static final Parcelable.Creator<MotionResponce> CREATOR = new Parcelable.Creator<MotionResponce>() {
+    public static final Creator<MotionResponce> CREATOR = new Creator<MotionResponce>() {
         @Override
         public MotionResponce createFromParcel(Parcel source) {
             return new MotionResponce(source);
