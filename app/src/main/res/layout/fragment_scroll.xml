@@ -2,22 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <com.example.nds.darkcalendar.zoomlayout.ZoomLayout
-        android:id="@+id/main_zoom"
+        android:id="@+id/zoom_fragment_scroll"
         android:layout_width="match_parent"
         android:layout_height="100dp">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </RelativeLayout>
-
+            android:layout_height="match_parent"/>
     </com.example.nds.darkcalendar.zoomlayout.ZoomLayout>
-
     <TextView
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:id="@+id/tv_info"
+        android:layout_below="@+id/zoom_fragment_scroll"
+        android:id="@+id/tv_fragment_scroll"
+        android:text="SCROLL"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </RelativeLayout>

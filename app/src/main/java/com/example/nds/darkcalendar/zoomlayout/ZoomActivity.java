@@ -1,4 +1,4 @@
-package com.example.nds.darkcalendar.ZoomLayout;
+package com.example.nds.darkcalendar.zoomlayout;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

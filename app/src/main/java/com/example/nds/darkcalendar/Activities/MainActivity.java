@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.nds.darkcalendar.R;
+import com.example.nds.darkcalendar.Responce.CamRecordsRespone;
 import com.example.nds.darkcalendar.Responce.GetDatesResponce;
 import com.example.nds.darkcalendar.Services.ICamRecordsService;
-import com.example.nds.darkcalendar.ZoomLayout.ZoomActivity;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity  {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openVideoScrollActivity();
+
             }
         });
         caldroidFragment = new CaldroidFragment();
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity  {
         caldroidListener =  new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
-
+                dateSecelcted(date);
             }
 
             @Override
@@ -190,11 +190,32 @@ public class MainActivity extends AppCompatActivity  {
         Toast.makeText(this, errorMessage,Toast.LENGTH_LONG);
     }
 
-    private void openVideoScrollActivity(){
-        Intent intent = new Intent(this,ZoomActivity.class);
-        startActivity(intent);
+
+    private void dateSecelcted(Date date){
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        ICamRecordsService camRecordsService = retrofit.create(ICamRecordsService.class);
+        Call<CamRecordsRespone> foldersResponce = camRecordsService.getFolders("PHPSESSID=lmots4gqjsc1i4kkh7elipgkt5", 179,sf.format(date));
+        foldersResponce.enqueue(new Callback<CamRecordsRespone>() {
+            @Override
+            public void onResponse(Call<CamRecordsRespone> call, Response<CamRecordsRespone> response) {
+                handleFolderResponce(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CamRecordsRespone> call, Throwable t) {
+                showError(t.getLocalizedMessage());
+            }
+        });
+
     }
 
+    private void handleFolderResponce(CamRecordsRespone recordsRespone){
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(VideoActivityWithScroll.RECORDS_RESPONCE,recordsRespone);
+        Intent intent = new Intent(this,VideoActivityWithScroll.class);
+        intent.putExtra(VideoActivityWithScroll.RECORDS_RESPONCE,recordsRespone);
+        startActivity(intent);
+    }
 
 
 

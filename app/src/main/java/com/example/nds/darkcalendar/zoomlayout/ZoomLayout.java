@@ -1,4 +1,4 @@
-package com.example.nds.darkcalendar.ZoomLayout;
+package com.example.nds.darkcalendar.zoomlayout;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -223,15 +223,17 @@ public class ZoomLayout extends FrameLayout implements ScaleGestureDetector.OnSc
     }
 
     public void setRedLi(ArrayList<Integer> redSeconds) {
-        int startSec = redSeconds.get(0);
-        ArrayList<RedLine> redLi = new ArrayList<>();
-        for (int i = 1; i < redSeconds.size(); i++) {
-            if (redSeconds.get(i) - redSeconds.get(i - 1) > 1) {
-                redLi.add(new RedLine(startSec, redSeconds.get(i - 1)));
-                startSec = redSeconds.get(i);
+        if(redSeconds.size()>0) {
+            int startSec = redSeconds.get(0);
+            ArrayList<RedLine> redLi = new ArrayList<>();
+            for (int i = 1; i < redSeconds.size(); i++) {
+                if (redSeconds.get(i) - redSeconds.get(i - 1) > 1) {
+                    redLi.add(new RedLine(startSec, redSeconds.get(i - 1)));
+                    startSec = redSeconds.get(i);
+                }
             }
+            redLines = new RedLines(redLi);
         }
-        redLines = new RedLines(redLi);
     }
 
 
@@ -388,7 +390,9 @@ public class ZoomLayout extends FrameLayout implements ScaleGestureDetector.OnSc
         endVisibleSec = secsInView * endVisiblePercent;
         threezoom.checkVisebility(startVisibleSec, endVisibleSec);
         progressCursor.init(currentProgress);
-        redLines.checkVisibleRedLines(startVisibleSec, endVisibleSec);
+        if(redLines!=null) {
+            redLines.checkVisibleRedLines(startVisibleSec, endVisibleSec);
+        }
         visibleDevisers = threezoom.getVisibleDeviders(getZoomLevel(startVisibleSec, endVisibleSec));
         Log.d(TAG, "startVisibleSec: " + startVisibleSec + " endVisibleSec " + endVisibleSec);
         float visibleSecs = endVisibleSec - (int) startVisibleSec;
@@ -462,7 +466,7 @@ public class ZoomLayout extends FrameLayout implements ScaleGestureDetector.OnSc
             }
         }
 
-        if (redLines.getVisibleRedLines() != null) {
+        if (redLines!=null && redLines.getVisibleRedLines() != null) {
             for (int i = 0; i < redLines.getVisibleRedLines().size(); i++) {
                 canvas.drawRect(redLines.getVisibleRedLines().get(i).getStartXPos(), getHeight() / 3,
 //                        redLines.getVisibleRedLines().get(i).getEndSec()-redLines.getVisibleRedLines().get(i).getStartSec()<1?redLines.getVisibleRedLines().get(i).getEndSec()+1:redLines.getVisibleRedLines().get(i).getEndSec(),
