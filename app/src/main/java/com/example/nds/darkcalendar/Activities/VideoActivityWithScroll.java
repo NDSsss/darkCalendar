@@ -13,6 +13,11 @@ import com.example.nds.darkcalendar.Responce.GetDatesResponce;
 import com.example.nds.darkcalendar.Responce.MotionResponce;
 import com.example.nds.darkcalendar.Services.ICamRecordsService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -25,20 +30,20 @@ public class VideoActivityWithScroll extends AppCompatActivity {
     public static final String RECORDS_RESPONCE = "VideoActivityWithScroll.RECORDS_RESPONCE";
     public Retrofit retrofit;
     private CamRecordsRespone recordsRespone;
+    private ScrollFragment scrollFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initRetrofit();
+        recordsRespone = (CamRecordsRespone) getIntent().getExtras().getParcelable(RECORDS_RESPONCE);
         getRectangles();
         setContentView(R.layout.activity_video_scroll);
-        recordsRespone = (CamRecordsRespone) getIntent().getExtras().getParcelable(RECORDS_RESPONCE);
         LinearLayout llVideoContainer = (LinearLayout)findViewById(R.id.video_scroll_video_container);
         LinearLayout llScrollContainer = (LinearLayout)findViewById(R.id.video_scroll_scroll_container);
-        ScrollFragment scrollFragment = new ScrollFragment();
+        scrollFragment = new ScrollFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScrollFragment.RECORDS_RESPONCE,recordsRespone);
         scrollFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().add(R.id.video_scroll_scroll_container,scrollFragment).commit();
     }
 
     private void initRetrofit(){
@@ -71,7 +76,20 @@ public class VideoActivityWithScroll extends AppCompatActivity {
 
     private void handleMotionResponce(MotionResponce motionResponce){
         if(motionResponce.isSuccess()){
+            ArrayList<Integer> redSeconds = new ArrayList<>();
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+            Date startDate;
+            try {
+                startDate = sf.parse(recordsRespone.getData().get(0).getStart());
+            } catch (ParseException e){
+                showError(e.getLocalizedMessage());
+                return;
+            }
+            String[] parseTime = recordsRespone.getData().get(0).getStart().split(" ")[1].split(":");
+            int startSecond = Integer.parseInt(parseTime[0])*360*60 +Integer.parseInt(parseTime[1])*360 + Integer.parseInt(parseTime[2]) ;
 
+
+            getSupportFragmentManager().beginTransaction().add(R.id.video_scroll_scroll_container,scrollFragment).commit();
         } else {
             showError(motionResponce.getMessage());
         }
